@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import mainStyles from "./page.module.css";
 import ResponsiveAppBar from "@/components/AppBar";
 import TextField from "@mui/material/TextField";
@@ -13,14 +13,14 @@ import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Toast from "@/components/Toast";
-
-interface SignUpFormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import Link from "@mui/material/Link";
+import {
+  getAuthToken,
+  setAuthToken,
+  setRefreshToken,
+} from "../../utils/userStorage";
+import { SignUpFormValues } from "@/utils/constants";
+import { userSignUp } from "@/services/api";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
@@ -41,6 +41,7 @@ const validationSchema = Yup.object({
 });
 
 const Signup = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
@@ -62,9 +63,15 @@ const Signup = () => {
     setToastOpen(false);
   };
 
-  const showToast = () => {
-    setToastOpen(true);
-  };
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      setAlert({ type: "warning", text: "Already logged in!" });
+      setTimeout(() => {
+        router.push("/", { scroll: false });
+      }, 500);
+    }
+  }, []);
 
   const formik = useFormik<SignUpFormValues>({
     initialValues: {
@@ -80,27 +87,25 @@ const Signup = () => {
 
   async function submitSignUpForm(values: SignUpFormValues) {
     try {
-      console.log("form values>>>>", values);
-      const res = await axios.post("http://localhost:4001/user/signup", values);
-      if (res.status !== 201) {
+      const response: any = await userSignUp(values);
+      if (!response) {
         setAlert({ type: "error", text: "Something went wrong" });
         setToastOpen(true);
       }
+      setAuthToken(response.data.jwt);
+      setRefreshToken(response.data.refreshToken);
       setAlert({
         type: "success",
         text: "Congratulations! Sign Up Successfull!",
       });
       setToastOpen(true);
+      router.push("/", { scroll: false });
     } catch (error: any) {
       console.log(error.response.statusText);
       setAlert({ type: "error", text: error.response.statusText });
       setToastOpen(true);
     }
   }
-
-  const removeError = () => {
-    setAlert({ type: "", text: "" });
-  };
 
   return (
     <>
@@ -211,6 +216,16 @@ const Signup = () => {
                   ),
                 }}
               />
+              <div className={mainStyles.signupLinkWrapper}>
+                <Link
+                  href="#"
+                  underline="hover"
+                  className={mainStyles.linkText}
+                  onClick={() => router.push("/SignIn")}
+                >
+                  Already have account?
+                </Link>
+              </div>
               <Button
                 variant="contained"
                 size="medium"

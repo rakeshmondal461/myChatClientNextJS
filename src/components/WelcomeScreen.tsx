@@ -1,10 +1,18 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import chatImg from "assets/images/chat_logo.png";
-import Image from "next/image";
 import styles from "../app/page.module.css";
+import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/utils/userStorage";
 
 const WelcomeScreen = () => {
+  const router = useRouter();
+  useEffect(() => {
+    const token = getAuthToken();
+    if (!token) {
+      router.push("/SignIn", { scroll: false });
+    }
+  }, []);
   return (
     <div className={styles.heroContainer}>
       <img
