@@ -1,0 +1,28 @@
+.formWrapper {
+  background-color: #fff;
+  padding: 20px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 4px;
+}
+.formWrapper h4 {
+  margin-bottom: 20px;
+}
+.formControl {
+  gap: 10px;
+}
+.signUpField {
+  width: 260px;
+}
+.signUpSubmitButton {
+  margin-block-start: 10px;
+}
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  padding-block: 20px;
+  padding-inline: 20px;
+  background-color: #19b2f2;
+  height: 100vh;
+  width: 100%;
+}
