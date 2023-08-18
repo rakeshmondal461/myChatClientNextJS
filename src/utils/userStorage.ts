@@ -1,19 +1,9 @@
-export const getAuthToken = () => {
-  return localStorage.getItem("JWT");
+export const getUserData = () => {
+  return JSON.parse(localStorage.getItem("authData")!);
 };
 
-export const setAuthToken = (token: string) => {
-  //const tokenString = JSON.stringify(token);
-  localStorage.setItem("JWT", token);
-};
-
-export const getRefreshToken = () => {
-  return localStorage.getItem("refreshToken");
-};
-
-export const setRefreshToken = (token: string) => {
-  //const tokenString = JSON.stringify(token);
-  localStorage.setItem("refreshToken", token);
+export const setUserData = (data: any) => {
+  localStorage.setItem("authData", JSON.stringify(data));
 };
 
 export const clearAuthToken = () => {

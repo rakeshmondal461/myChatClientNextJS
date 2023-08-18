@@ -28,13 +28,13 @@ export const authReducer = createSlice({
     updateLoginStatus: (state, action: PayloadAction<any>) => {
       state.isLoggedIn = action.payload;
     },
-    setUserData: (state, action: PayloadAction<any>) => {
+    setUserInformation: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateLoginStatus, setUserData } = authReducer.actions;
+export const { updateLoginStatus, setUserInformation } = authReducer.actions;
 
 export default authReducer.reducer;

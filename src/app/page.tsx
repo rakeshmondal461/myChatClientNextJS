@@ -1,16 +1,10 @@
-import React, { useEffect } from "react";
-import Image from "next/image";
-import styles from "./page.module.css";
-import ResponsiveAppBar from "@/components/AppBar";
-import WelcomeScreen from "@/components/WelcomeScreen";
+import React from "react";
+import WelcomeScreen from "@/components/home/WelcomeScreen";
 
 export default function Home() {
   return (
     <>
-      <ResponsiveAppBar />
-      <div className={styles.mainContainer}>
-        <WelcomeScreen />
-      </div>
+      <WelcomeScreen />
     </>
   );
 }
