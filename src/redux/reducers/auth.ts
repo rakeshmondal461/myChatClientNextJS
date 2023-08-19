@@ -31,9 +31,19 @@ export const authReducer = createSlice({
     SetUserInformation: (state, action: PayloadAction<any>) => {
       state.user = { ...state.user, ...action.payload };
     },
+    ResetUserInformation: (state) => {
+      state.isLoggedIn = false;
+      state.user = {
+        uid: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+      };
+    },
   },
 });
 
-export const { UpdateLoginStatus, SetUserInformation } = authReducer.actions;
+export const { UpdateLoginStatus, SetUserInformation, ResetUserInformation } =
+  authReducer.actions;
 
 export default authReducer.reducer;

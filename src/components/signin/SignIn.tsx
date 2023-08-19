@@ -41,7 +41,7 @@ const SignIn = () => {
     if (auth.isLoggedIn) {
       router.push("/", { scroll: false });
     }
-  }, [auth]);
+  }, [auth.isLoggedIn]);
 
   const formik = useFormik<SignInFormValues>({
     initialValues: {

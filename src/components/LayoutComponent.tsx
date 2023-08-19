@@ -3,12 +3,14 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getStorageData, setStorageData } from "@/utils/userStorage";
 import { getUser, validateRefreshToken } from "@/services/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";
 
 const LayoutComponent = ({ children }: any) => {
   const dispatch = useDispatch();
+  const auth = useSelector((state: any) => state.auth);
   const router = useRouter();
+
   useEffect(() => {
     const data = getStorageData();
     if (!data?.jwt) {

@@ -13,11 +13,18 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ChatIcon from "@mui/icons-material/Chat";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { clearAuthToken } from "@/utils/userStorage";
+import { ResetUserInformation } from "@/redux/reducers/auth";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 function ResponsiveAppBar() {
+  const dispatch = useDispatch();
+  const auth = useSelector((state: any) => state.auth);
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -36,10 +43,33 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const option = target.textContent?.toLowerCase();
+    console.log("vvvv>>", option);
+    switch (option) {
+      case "profile":
+        router.push("/profile", { scroll: false });
+        break;
+      case "logout":
+        logoutCurrentUser();
+        break;
+      default:
+        break;
+    }
     setAnchorElUser(null);
   };
 
+  const logoutCurrentUser = () => {
+    clearAuthToken();
+    dispatch(ResetUserInformation());
+    router.push("/", { scroll: false });
+  };
+
+  const handleHomeButton = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push("/", { scroll: false });
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -52,6 +82,7 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             href="/"
+            onClick={handleHomeButton}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -133,36 +164,37 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {auth.isLoggedIn ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : null}
         </Toolbar>
       </Container>
     </AppBar>
