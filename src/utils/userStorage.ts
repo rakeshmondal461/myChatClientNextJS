@@ -1,8 +1,8 @@
-export const getUserData = () => {
+export const getStorageData = () => {
   return JSON.parse(localStorage.getItem("authData")!);
 };
 
-export const setUserData = (data: any) => {
+export const setStorageData = (data: any) => {
   localStorage.setItem("authData", JSON.stringify(data));
 };
 

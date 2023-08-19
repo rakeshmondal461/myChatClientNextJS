@@ -22,19 +22,18 @@ const initialState: AuthInterface = {
 };
 
 export const authReducer = createSlice({
-  name: "auth",
+  name: "AUTH_REDUCER",
   initialState,
   reducers: {
-    updateLoginStatus: (state, action: PayloadAction<any>) => {
+    UpdateLoginStatus: (state, action: PayloadAction<any>) => {
       state.isLoggedIn = action.payload;
     },
-    setUserInformation: (state, action: PayloadAction<any>) => {
-      state.user = action.payload;
+    SetUserInformation: (state, action: PayloadAction<any>) => {
+      state.user = { ...state.user, ...action.payload };
     },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { updateLoginStatus, setUserInformation } = authReducer.actions;
+export const { UpdateLoginStatus, SetUserInformation } = authReducer.actions;
 
 export default authReducer.reducer;

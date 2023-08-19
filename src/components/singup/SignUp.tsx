@@ -12,9 +12,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Link from "@mui/material/Link";
 import mainStyles from "./signup.module.css";
 import Toast from "../Toast";
-import { getUserData, setUserData } from "@/utils/userStorage";
+import { getStorageData, setStorageData } from "@/utils/userStorage";
 import { SignUpFormValues } from "@/utils/constants";
 import { userSignUp } from "@/services/api";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
@@ -36,6 +37,7 @@ const validationSchema = Yup.object({
 
 const SignUp = () => {
   const router = useRouter();
+  const auth = useSelector((state: any) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
@@ -58,14 +60,13 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    const data = getUserData();
-    if (data.jwt) {
+    if (auth.isLoggedIn) {
       setAlert({ type: "warning", text: "Already logged in!" });
       setTimeout(() => {
         router.push("/", { scroll: false });
       }, 500);
     }
-  }, []);
+  }, [auth]);
 
   const formik = useFormik<SignUpFormValues>({
     initialValues: {
@@ -86,7 +87,7 @@ const SignUp = () => {
         setAlert({ type: "error", text: "Something went wrong" });
         setToastOpen(true);
       }
-      setUserData(response.data);
+      setStorageData(response.data);
       setAlert({
         type: "success",
         text: "Congratulations! Sign Up Successfull!",

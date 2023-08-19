@@ -19,3 +19,10 @@ export const getUser = async (token: string) => {
   });
   return res;
 };
+
+export const validateRefreshToken = async (refreshToken: string) => {
+  const res = await axios.post("http://localhost:4001/user/refresh", {
+    refreshToken,
+  });
+  return res;
+};

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import mainStyles from "./signin.module.css";
 import { useFormik } from "formik";
@@ -12,10 +12,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { SignInFormValues } from "@/utils/constants";
 import { getUser, userSignIn } from "@/services/api";
-import { setUserData } from "@/utils/userStorage";
+import { setStorageData } from "@/utils/userStorage";
 import { useSelector, useDispatch } from "react-redux";
 import Toast from "../Toast";
-import { updateLoginStatus, setUserInformation } from "@/redux/reducers/auth";
+import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -27,6 +27,7 @@ const validationSchema = Yup.object({
 const SignIn = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const auth = useSelector((state: any) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [alert, setAlert] = useState<{ type: any; text: string }>({
@@ -35,6 +36,12 @@ const SignIn = () => {
   });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  useEffect(() => {
+    if (auth.isLoggedIn) {
+      router.push("/", { scroll: false });
+    }
+  }, [auth]);
 
   const formik = useFormik<SignInFormValues>({
     initialValues: {
@@ -54,15 +61,15 @@ const SignIn = () => {
         setToastOpen(true);
       }
       const responseData = response.data;
-      setUserData(responseData);
+      setStorageData(responseData);
       setAlert({
         type: "success",
         text: "Sign In Successfully!",
       });
       setToastOpen(true);
       const { data: userData } = await getUser(responseData.jwt);
-      dispatch(updateLoginStatus(true));
-      dispatch(setUserInformation(userData));
+      dispatch(UpdateLoginStatus(true));
+      dispatch(SetUserInformation(userData));
       router.push("/", { scroll: false });
     } catch (error: any) {
       console.log(error.response.statusText);

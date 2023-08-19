@@ -1,34 +1,58 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getUserData } from "@/utils/userStorage";
-import { getUser } from "@/services/api";
+import { getStorageData, setStorageData } from "@/utils/userStorage";
+import { getUser, validateRefreshToken } from "@/services/api";
 import { useDispatch } from "react-redux";
-import { setUserInformation, updateLoginStatus } from "@/redux/reducers/auth";
+import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";
 
 const LayoutComponent = ({ children }: any) => {
   const dispatch = useDispatch();
   const router = useRouter();
   useEffect(() => {
-    const data = getUserData();
+    const data = getStorageData();
     if (!data?.jwt) {
       router.push("/signin", { scroll: false });
     } else {
       getUserInfo(data.jwt);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function getUserInfo(jwt: string) {
     try {
       const { data: userData } = await getUser(jwt);
-      dispatch(updateLoginStatus(true));
-      dispatch(setUserInformation(userData));
+      dispatch(UpdateLoginStatus(true));
+      dispatch(SetUserInformation(userData));
       console.log(userData);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      router.push("/signin", { scroll: false });
+
+      if (
+        error.response.status === 401 &&
+        error.response.data.message === "Invalid token."
+      ) {
+        // Access token has expired, attempt to refresh it
+        try {
+          const { refreshToken } = getStorageData();
+          const refreshResponse = await validateRefreshToken(refreshToken);
+          const newToken = refreshResponse.data;
+          console.log("newToken>>>", newToken);
+          setStorageData(newToken);
+          const { data: userData } = await getUser(newToken.jwt);
+          dispatch(UpdateLoginStatus(true));
+          dispatch(SetUserInformation(userData));
+        } catch (refreshError: any) {
+          console.error("Token refresh failed:", refreshError.message);
+          router.push("/signin", { scroll: false });
+        }
+      } else {
+        console.error("Protected request failed:", error.message);
+        router.push("/signin", { scroll: false });
+      }
     }
   }
+
   return <>{children}</>;
 };
 
