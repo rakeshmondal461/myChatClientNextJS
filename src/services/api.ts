@@ -26,3 +26,17 @@ export const validateRefreshToken = async (refreshToken: string) => {
   });
   return res;
 };
+
+export const uploadProfileImage = async (formData: FormData, token: string) => {
+  const res = await axios.post(
+    "http://localhost:4001/user/uploadProfileImage",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return res;
+};
