@@ -13,35 +13,22 @@ import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styles from "./profile.module.css";
 import ViewProfile from "./ViewProfile";
+import EditProfile from "./EditProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, uploadProfileImage } from "@/services/api";
-import { getStorageData } from "@/utils/userStorage";
-import Toast from "../Toast";
+import { getStorageData } from "@/services/userStorage";
 import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";
 import { useRouter } from "next/navigation";
+import useToast from "@/hooks/useToast";
 const Profile = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { createToast, openToast, toastElement } = useToast();
   const { user } = useSelector((state: any) => state.auth);
+  const { isEditProfile } = useSelector((state: any) => state.setting);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [profileBlob, setProfileBlob] = useState<string | null>(null);
-
-  const [toastOpen, setToastOpen] = useState(false);
-  const [alert, setAlert] = useState<{ type: any; text: string }>({
-    type: "",
-    text: "",
-  });
-
-  const handleToastClose = (
-    event: React.SyntheticEvent<Element, Event>,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setToastOpen(false);
-  };
 
   const handleEditAvatarClick = () => {
     console.log(fileInputRef.current);
@@ -79,8 +66,8 @@ const Profile = () => {
       try {
         const response: any = await uploadProfileImage(formData, jwt);
         if (response.status === 202) {
-          setAlert({ type: "success", text: "Image uploaded successfully." });
-          setToastOpen(true);
+          createToast("success", "Image uploaded successfully.");
+          openToast();
           const { data: userData } = await getUser(jwt);
           dispatch(UpdateLoginStatus(true));
           dispatch(SetUserInformation(userData));
@@ -165,7 +152,7 @@ const Profile = () => {
                   </>
                 )}
               </Grid>
-              <ViewProfile />
+              {isEditProfile ? <EditProfile /> : <ViewProfile />}
             </Grid>
           </Paper>
         ) : (
@@ -176,13 +163,8 @@ const Profile = () => {
             height="40vh"
           />
         )}
+        {toastElement}
       </Container>
-      <Toast
-        open={toastOpen}
-        onClose={handleToastClose}
-        message={alert.text}
-        severity={alert.type}
-      />
     </>
   );
 };

@@ -12,7 +12,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { SignInFormValues } from "@/utils/constants";
 import { getUser, userSignIn } from "@/services/api";
-import { setStorageData } from "@/utils/userStorage";
+import { setStorageData } from "@/services/userStorage";
 import { useSelector, useDispatch } from "react-redux";
 import Toast from "../Toast";
 import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";

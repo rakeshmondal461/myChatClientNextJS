@@ -12,7 +12,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Link from "@mui/material/Link";
 import mainStyles from "./signup.module.css";
 import Toast from "../Toast";
-import { getStorageData, setStorageData } from "@/utils/userStorage";
+import { getStorageData, setStorageData } from "@/services/userStorage";
 import { SignUpFormValues } from "@/utils/constants";
 import { userSignUp } from "@/services/api";
 import { useSelector } from "react-redux";

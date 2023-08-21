@@ -40,3 +40,16 @@ export const uploadProfileImage = async (formData: FormData, token: string) => {
   );
   return res;
 };
+
+export const updateUser = async (token: string, userData: any) => {
+  const res = await axios.post(
+    "http://localhost:4001/user/updateProfile",
+    userData,
+    {
+      headers: {
+        Authorization: "Bearer " + token, //the token is a variable which holds the token
+      },
+    }
+  );
+  return res;
+};

@@ -1,9 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Grid, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { ToggleActiveEditProfile } from "@/redux/reducers/setting";
 const ViewProfile: React.FC = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state: any) => state.auth);
+
+  const enableEditProfile = () => {
+    dispatch(ToggleActiveEditProfile(true));
+  };
   return (
     <>
       <Grid item xs={12} md={8}>
@@ -24,7 +30,7 @@ const ViewProfile: React.FC = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              // Handle edit profile click
+              enableEditProfile();
             }}
           >
             Edit Profile

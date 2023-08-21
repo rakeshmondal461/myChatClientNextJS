@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getStorageData, setStorageData } from "@/utils/userStorage";
+import { getStorageData, setStorageData } from "@/services/userStorage";
 import { getUser, validateRefreshToken } from "@/services/api";
 import { useDispatch, useSelector } from "react-redux";
 import { SetUserInformation, UpdateLoginStatus } from "@/redux/reducers/auth";

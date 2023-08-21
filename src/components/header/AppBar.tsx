@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ChatIcon from "@mui/icons-material/Chat";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { clearAuthToken } from "@/utils/userStorage";
+import { clearAuthToken } from "@/services/userStorage";
 import { ResetUserInformation } from "@/redux/reducers/auth";
 
 const pages = ["Products", "Pricing", "Blog"];
@@ -140,6 +140,7 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             href=""
+            onClick={handleHomeButton}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
