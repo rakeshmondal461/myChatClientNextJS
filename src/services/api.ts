@@ -20,6 +20,15 @@ export const getUser = async (token: string) => {
   return res;
 };
 
+export const getUsers = async (token: string) => {
+  const res = await axios.get("http://localhost:4001/user/getUsers", {
+    headers: {
+      Authorization: "Bearer " + token, //the token is a variable which holds the token
+    },
+  });
+  return res;
+};
+
 export const validateRefreshToken = async (refreshToken: string) => {
   const res = await axios.post("http://localhost:4001/user/refresh", {
     refreshToken,

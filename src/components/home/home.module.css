@@ -1,11 +1,38 @@
 .mainContainer {
-  padding-block: 20px;
-  padding-inline: 20px;
+  padding-block: 10px;
+  padding-inline: 10px;
   background-color: #19b2f2;
   height: 100vh;
   width: 100%;
+  display: flex;
+}
+.userListSection {
+  width: 300px;
+  background-color: #fff;
+  height: 100vh;
+  border-radius: 5px 0 0 0;
+}
+.chatBodySection {
+  background-color: #fff;
+  flex: 1;
+  border-left: 1.5px solid #d4d4d4;
+  height: 100vh;
 }
 
+.chatTitleSection {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 5px;
+  padding-inline: 18px;
+}
+
+.chatTitleSection .iconWrapper {
+  cursor: pointer;
+}
+.addNewListContainer {
+  padding-inline: 15px;
+  padding-block: 10px;
+}
 .heroContainer {
   display: flex;
   justify-content: center;

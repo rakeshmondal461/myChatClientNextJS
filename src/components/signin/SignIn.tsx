@@ -137,7 +137,7 @@ const SignIn = () => {
                   href="#"
                   underline="hover"
                   className={mainStyles.linkText}
-                  onClick={() => router.push("/Signup")}
+                  onClick={() => router.push("/signup")}
                 >
                   Create New Account
                 </Link>
